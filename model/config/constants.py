@@ -4,10 +4,17 @@ OPENAI_API_URL_EMBEDDINGS = "https://api.openai.com/v1/embeddings"
 CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
                                      "id SERIAL PRIMARY KEY," \
                                      "question TEXT," \
-                                     "question_embedding TEXT," \
+                                     "question_embedding JSONB," \
                                      "answer TEXT," \
-                                     "answer_embedding TEXT)"
-INSERT_INTO_EMBEDDINGS_TABLE = "INSERT INTO embeddings (question, question_embedding, answer, answer_embedding) VALUES (%s, %s, %s, %s)"
+                                     "answer_embedding JSONB)"
+INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question_embedding, answer, answer_embedding) " \
+                               "VALUES (%s, %s, %s, %s)" \
+                               "ON CONFLICT (question) DO UPDATE " \
+                               "SET question_embedding = EXCLUDED.question_embedding," \
+                               "answer = EXCLUDED.answer," \
+                               "answer_embedding = EXCLUDED.answer_embedding"
+TABLE_EMBEDDINGS_EXISTS_QUERY = " SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_name = 'embeddings') "
+ADD_CONSTRAINT_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
 FAQ_DATABASE = [
         {
             "question": "How do I change my profile information?",

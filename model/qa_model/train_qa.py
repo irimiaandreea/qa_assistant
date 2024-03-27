@@ -61,11 +61,17 @@ def compute_embeddings(conn, faq_database):
                 raise ValueError(f"Error: {response.status_code}")
 
 
+# STEP 2 - Similarity Search Function
+#todo
+
 if __name__ == "__main__":
     if (check_if_openai_api_key_exists()):  # TRUE
         with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT) as conn:
             with conn.cursor() as cursor:
-                db.create_embeddings_table(conn, cursor)
+                if not db.table_exists(conn, cursor):
+                    db.create_embeddings_table(conn, cursor)
+                    if not db.constraint_exists(conn, cursor):
+                        db.add_unique_constraint(conn, cursor)
 
         compute_embeddings(conn, constants.FAQ_DATABASE)
 
