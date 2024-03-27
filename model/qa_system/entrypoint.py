@@ -105,7 +105,7 @@ def get_answer_from_openai(query):
     payload = {
         "prompt": query,
         "max_tokens": 100,
-        "model": "gpt-3.5-turbo-instruct"
+        "model": constants.OPENAI_GET_ANSWER_MODEL
     }
     headers = {
         "Content-Type": constants.CONTENT_TYPE,
