@@ -1,6 +1,7 @@
-CONTENT_TYPE_JSON = "application/json"
+CONTENT_TYPE = "application/json"
 EMBEDDING_MODEL = "text-embedding-3-small"
 OPENAI_API_URL_EMBEDDINGS = "https://api.openai.com/v1/embeddings"
+OPENAI_API_URL_COMPLETIONS = "https://api.openai.com/v1/completions"
 CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
                                      "id SERIAL PRIMARY KEY," \
                                      "question TEXT," \
@@ -15,6 +16,7 @@ INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question
                                "answer_embedding = EXCLUDED.answer_embedding"
 TABLE_EMBEDDINGS_EXISTS_QUERY = " SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_name = 'embeddings') "
 ADD_CONSTRAINT_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
+SIMILARITY_THRESHOLD = 0.8
 FAQ_DATABASE = [
         {
             "question": "How do I change my profile information?",
