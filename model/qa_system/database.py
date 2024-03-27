@@ -17,35 +17,53 @@ def insert_into_embeddings(conn, cursor, current_question, current_answer, curre
 
 
 def create_embeddings_table(conn, cursor):
-    cursor.execute(constants.CREATE_EMBEDDINGS_TABLE_QUERY)
-    conn.commit()
+    try:
+        cursor.execute(constants.CREATE_EMBEDDINGS_TABLE_QUERY)
+        conn.commit()
+    except psycopg2.Error as exception:
+        conn.rollback()
+        raise DatabaseError(f"Error creating 'embeddings' table: {exception}")
 
 
 def add_unique_constraint(conn, cursor):
-    cursor.execute(constants.ADD_CONSTRAINT_QUERY)
-    conn.commit()
+    try:
+        cursor.execute(constants.ADD_CONSTRAINT_QUERY)
+        conn.commit()
+    except psycopg2.Error as exception:
+        conn.rollback()
+        raise DatabaseError(f"Error adding unique constraint: {exception}")
 
 
 def table_exists(conn, cursor):
-    cursor.execute(constants.TABLE_EMBEDDINGS_EXISTS_QUERY)
-    conn.commit()
-    return cursor.fetchone()[0]
+    try:
+        cursor.execute(constants.TABLE_EMBEDDINGS_EXISTS_QUERY)
+        conn.commit()
+        return bool(cursor.fetchone())
+    except psycopg2.Error as exception:
+        raise DatabaseError(f"Error checking table existence: {exception}")
 
 
 def constraint_exists(conn, cursor):
-    cursor.execute(constants.ADD_CONSTRAINT_QUERY)
-    conn.commit()
-    return cursor.fetchone()[0]
+    try:
+        cursor.execute(constants.ADD_CONSTRAINT_QUERY)
+        conn.commit()
+        return bool(cursor.fetchone())
+    except psycopg2.Error as exception:
+        raise DatabaseError(f"Error checking constraint existence: {exception}")
 
 
 def retrieve_embeddings_from_database(conn):
-    with conn.cursor() as cursor:
-        cursor.execute("SELECT question, question_embedding, answer  FROM embeddings")
-        conn.commit()
-        rows = cursor.fetchall()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT question, question_embedding, answer  FROM embeddings")
+            conn.commit()
+            rows = cursor.fetchall()
 
-        faq_questions = [row[0] for row in rows]  # Assuming the first column is questions
-        faq_questions_embeddings = [row[1] for row in rows]  # Assuming the second column is questions_embedding
-        faq_answers = [row[2] for row in rows]  # Assuming the second column is answers
+            faq_questions = [row[0] for row in rows]  # Assuming the first column is questions
+            faq_questions_embeddings = [row[1] for row in rows]  # Assuming the second column is questions_embedding
+            faq_answers = [row[2] for row in rows]  # Assuming the second column is answers
 
-    return faq_questions, faq_questions_embeddings, faq_answers
+        return faq_questions, faq_questions_embeddings, faq_answers
+
+    except psycopg2.Error as exception:
+        raise DatabaseError(f"Error retrieving embeddings from database: {exception}")
