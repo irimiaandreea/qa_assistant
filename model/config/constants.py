@@ -1,8 +1,8 @@
 CONTENT_TYPE = "application/json"
 EMBEDDING_MODEL = "text-embedding-3-small"
-OPENAI_GET_ANSWER_MODEL = "gpt-3.5-turbo-instruct"
+OPENAI_GET_ANSWER_MODEL = "gpt-4-turbo-preview"
 OPENAI_API_URL_EMBEDDINGS = "https://api.openai.com/v1/embeddings"
-OPENAI_API_URL_COMPLETIONS = "https://api.openai.com/v1/completions"
+OPENAI_API_URL_COMPLETIONS = "https://api.openai.com/v1/chat/completions"
 CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
                                 "id SERIAL PRIMARY KEY," \
                                 "question TEXT," \

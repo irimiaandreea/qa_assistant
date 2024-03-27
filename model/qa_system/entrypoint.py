@@ -100,12 +100,16 @@ def decide_use_openai(similarity_score, similarity_threshold):
         return False  # Use local FAQ database
 
 
-# Function to interact with OpenAI API to get an answer
-def get_answer_from_openai(query):
+# Function to interact with OpenAI API to get an answerZ
+def get_answer_from_openai(user_query):
     payload = {
-        "prompt": query,
-        "max_tokens": 100,
-        "model": constants.OPENAI_GET_ANSWER_MODEL
+        "model": constants.OPENAI_GET_ANSWER_MODEL,
+        "messages": [
+            {
+                "role": "user",
+                "content": user_query
+            }
+        ]
     }
     headers = {
         "Content-Type": constants.CONTENT_TYPE,
@@ -113,9 +117,15 @@ def get_answer_from_openai(query):
     }
     response = requests.post(constants.OPENAI_API_URL_COMPLETIONS, json=payload, headers=headers)
     if response.status_code == 200:
-        return response.json()["choices"][0]["text"]
+        data = response.json()
+        # Extract the response from the API
+        if data.get("choices"):
+            return data["choices"][0]["message"]["content"]
+        else:
+            return None  # Handle case when API response does not contain choices
     else:
-        raise ValueError(f"Error: {response.status_code}")
+        # Handle API error
+        return None
 
 
 def process_query(conn, user_query, similarity_threshold):
