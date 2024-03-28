@@ -1,33 +1,17 @@
 import os
-from dotenv import load_dotenv
-import requests
-import psycopg2
-import model.config.constants as constants
-import database as db
+
 import numpy as np
-from scipy.spatial.distance import cosine
+import requests
+from dotenv import load_dotenv
 from openai import OpenAIError
+from scipy.spatial.distance import cosine
+
+import model.config.constants as constants
+import model.qa_system.database as db
 from model.exceptions.custom_exceptions import *
 
-load_dotenv(dotenv_path="../config/.env")
-
-# PostgreSQL
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
-
-# OpenAI
+load_dotenv(dotenv_path="model/config/.env")
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-
-
-def check_if_openai_api_key_exists():
-    if os.getenv("OPENAI_API_KEY"):
-        return True
-    else:
-        return False
-
 
 # STEP 1 - Compute embeddings for FAQ questions & answers
 def compute_embeddings(conn, faq_database):
@@ -155,35 +139,3 @@ def process_user_query(conn, user_query, similarity_threshold):
     else:
         return answer_from_local_faq
 
-
-if __name__ == "__main__":
-    try:
-        if not check_if_openai_api_key_exists():  # TRUE
-            raise NoOpenAIKeyError("No OpenAI API key found")
-
-        with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST,
-                              port=DB_PORT) as conn:
-            with conn.cursor() as cursor:
-                if not db.table_exists(conn, cursor):
-                    db.create_embeddings_table(conn, cursor)
-                    if not db.constraint_exists(conn, cursor):
-                        db.add_unique_constraint(conn, cursor)
-
-        compute_embeddings(conn, constants.FAQ_DATABASE)
-
-        user_query = "What fruits have blue color?"
-        answer = process_user_query(conn, user_query, constants.SIMILARITY_THRESHOLD)
-        print("Question: ", user_query)
-        print("Answer:", answer)
-
-        cursor.close()
-        conn.close()
-
-    except NoOpenAIKeyError as exception:
-        print(f"No OpenAI API key found: {exception}")
-    except psycopg2.OperationalError as exception:
-        print(f"Database error: {exception}")
-    except OpenAIError as exception:
-        print(f"OpenAI error: {exception}")
-    except Exception as exception:
-        print(f"An unexpected error occurred: {exception}")
