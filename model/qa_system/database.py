@@ -15,6 +15,7 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 
+
 def get_connection():
     try:
         conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
@@ -44,31 +45,49 @@ def create_embeddings_table(conn, cursor):
         raise DatabaseError(f"Error creating 'embeddings' table: {exception}")
 
 
-def add_unique_constraint(conn, cursor):
+def create_user_table(conn, cursor):
     try:
-        cursor.execute(constants.ADD_CONSTRAINT_QUERY)
+        cursor.execute(constants.CREATE_USERS_TABLE_QUERY)
         conn.commit()
     except psycopg2.Error as exception:
         conn.rollback()
-        raise DatabaseError(f"Error adding unique constraint: {exception}")
+        raise DatabaseError(f"Error creating 'users' table: {exception}")
 
 
-def table_exists(conn, cursor):
+def add_embeddings_constraint(conn, cursor):
     try:
-        cursor.execute(constants.TABLE_EMBEDDINGS_EXISTS_QUERY)
+        cursor.execute(constants.ADD_EMBEDDINGS_CONSTRAINT)
+        conn.commit()
+    except psycopg2.Error as exception:
+        conn.rollback()
+        raise DatabaseError(f"Error adding unique embeddings constraint: {exception}")
+
+
+def add_users_constraint(conn, cursor):
+    try:
+        cursor.execute(constants.ADD_USERS_CONSTRAINT)
+        conn.commit()
+    except psycopg2.Error as exception:
+        conn.rollback()
+        raise DatabaseError(f"Error adding unique embeddings constraint: {exception}")
+
+
+def embeddings_constraint_exists(conn, cursor):
+    try:
+        cursor.execute(constants.CHECK_CONSTRAINT_EMBEDDINGS_QUERY)
         conn.commit()
         return bool(cursor.fetchone())
     except psycopg2.Error as exception:
-        raise DatabaseError(f"Error checking table existence: {exception}")
+        raise DatabaseError(f"Error checking embeddings constraint existence: {exception}")
 
 
-def constraint_exists(conn, cursor):
+def users_constraint_exists(conn, cursor):
     try:
-        cursor.execute(constants.ADD_CONSTRAINT_QUERY)
+        cursor.execute(constants.CHECK_CONSTRAINT_USERS_QUERY)
         conn.commit()
         return bool(cursor.fetchone())
     except psycopg2.Error as exception:
-        raise DatabaseError(f"Error checking constraint existence: {exception}")
+        raise DatabaseError(f"Error checking users constraint existence: {exception}")
 
 
 def retrieve_embeddings_from_database(conn):

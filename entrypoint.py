@@ -84,10 +84,12 @@ async def ask_question(user_question: UserQuestion):
 
         if conn:
             with conn.cursor() as cursor:
-                if not table_exists(conn, cursor):
-                    create_embeddings_table(conn, cursor)
-                    if not constraint_exists(conn, cursor):
-                        add_unique_constraint(conn, cursor)
+                create_embeddings_table(conn, cursor)
+                create_user_table(conn, cursor)
+                if not embeddings_constraint_exists(conn, cursor):
+                    add_embeddings_constraint(conn, cursor)
+                    if not users_constraint_exists(conn, cursor):
+                        add_users_constraint(conn, cursor)
 
         compute_embeddings(conn, constants.FAQ_DATABASE)
 

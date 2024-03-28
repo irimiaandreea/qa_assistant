@@ -9,6 +9,14 @@ CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
                                 "question_embedding JSONB," \
                                 "answer TEXT," \
                                 "answer_embedding JSONB)"
+CREATE_USERS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS users (" \
+                           " id SERIAL PRIMARY KEY," \
+                           " username VARCHAR(100)," \
+                           " password VARCHAR(100))"
+ADD_EMBEDDINGS_CONSTRAINT = "ALTER TABLE embeddings " \
+                            "ADD CONSTRAINT question_unique_constraint UNIQUE (question)"
+ADD_USERS_CONSTRAINT = "ALTER TABLE users " \
+                       "ADD CONSTRAINT username_unique_constraint UNIQUE (username)"
 INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question_embedding, answer, answer_embedding) " \
                                      "VALUES (%s, %s, %s, %s)" \
                                      "ON CONFLICT (question) DO UPDATE " \
@@ -16,7 +24,8 @@ INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question
                                      "answer = EXCLUDED.answer," \
                                      "answer_embedding = EXCLUDED.answer_embedding"
 TABLE_EMBEDDINGS_EXISTS_QUERY = " SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_name = 'embeddings') "
-ADD_CONSTRAINT_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
+CHECK_CONSTRAINT_EMBEDDINGS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
+CHECK_CONSTRAINT_USERS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'username_unique_constraint')"
 SIMILARITY_THRESHOLD = 0.8
 FAQ_DATABASE = [
     {
