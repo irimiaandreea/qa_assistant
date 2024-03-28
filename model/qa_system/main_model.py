@@ -13,6 +13,7 @@ from model.exceptions.custom_exceptions import *
 load_dotenv(dotenv_path="model/config/.env")
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+
 # STEP 1 - Compute embeddings for FAQ questions & answers
 def compute_embeddings(conn, faq_database):
     with conn.cursor() as cursor:
@@ -67,7 +68,7 @@ def get_embeddings(input_data):
 
 # STEP 2 - Similarity Search
 # finds the most similar question and  compute the similarity between a user's query and the questions in the FAQ database
-def similarity_search(user_query_embedding, faq_questions_embeddings, faq_answers,
+def similarity_search(user_query_embedding, faq_questions, faq_questions_embeddings, faq_answers,
                       similarity_threshold):
     similarities = [1 - cosine(user_query_embedding, faq_question_embedding) for faq_question_embedding in
                     faq_questions_embeddings]
@@ -78,11 +79,12 @@ def similarity_search(user_query_embedding, faq_questions_embeddings, faq_answer
     if valid_similarity_scores:
         max_similarity_index = np.argmax(similarities)
         max_similarity_score = similarities[max_similarity_index]
-        return faq_answers[max_similarity_index], max_similarity_score
+        return faq_answers[max_similarity_index], faq_questions[max_similarity_index], max_similarity_score
     else:
-        return None, None
+        return None, None, None
 
 
+# STEP 3 - Interacting with OpenAI API
 def decide_use_openai(similarity_score, similarity_threshold):
     if similarity_score is None or similarity_score < similarity_threshold:
         return True  # Use OpenAI API
@@ -90,7 +92,7 @@ def decide_use_openai(similarity_score, similarity_threshold):
         return False  # Use local FAQ database
 
 
-# Function to interact with OpenAI API to get an answerZ
+# Function to interact with OpenAI API to get an answer
 def get_answer_from_openai(user_query):
     payload = {
         "model": constants.OPENAI_GET_ANSWER_MODEL,
@@ -126,16 +128,16 @@ def process_user_query(conn, user_query, similarity_threshold):
 
     faq_questions, faq_questions_embeddings, faq_answers = db.retrieve_embeddings_from_database(conn)
 
-    answer_from_local_faq, similarity_score = similarity_search(user_query_embedding,
-                                                                faq_questions_embeddings,
-                                                                faq_answers,
-                                                                similarity_threshold)
+    answer_from_local_faq, question_from_local_faq, similarity_score = similarity_search(user_query_embedding,
+                                                                                         faq_questions,
+                                                                                         faq_questions_embeddings,
+                                                                                         faq_answers,
+                                                                                         similarity_threshold)
 
     use_openai = decide_use_openai(similarity_score, similarity_threshold)
 
     if use_openai:
         answer_from_openai = get_answer_from_openai(user_query)
-        return answer_from_openai
+        return "openai", "N/A", answer_from_openai
     else:
-        return answer_from_local_faq
-
+        return "local", question_from_local_faq, answer_from_local_faq

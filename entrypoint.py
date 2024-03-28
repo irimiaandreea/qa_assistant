@@ -1,10 +1,12 @@
 import os
+
 from dotenv import load_dotenv
-from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
-from model.qa_system.main_model import compute_embeddings, process_user_query
-from model.exceptions.custom_exceptions import NoOpenAIKeyError
+from pydantic import BaseModel
+
+from model.exceptions.custom_exceptions import NoOpenAIKeyError, RequestError
 from model.qa_system.database import *
+from model.qa_system.main_model import compute_embeddings, process_user_query
 
 app = FastAPI()
 load_dotenv(dotenv_path="model/config/.env")
@@ -24,15 +26,20 @@ class UserQuestion(BaseModel):
     user_question: str
 
 
+class AnswerResponse(BaseModel):
+    source: str
+    matched_question: str
+    answer: str
+
+
 def check_if_openai_api_key_exists():
-    print("OPENAI_API_KEY ", OPENAI_API_KEY)
     if os.getenv("OPENAI_API_KEY"):
         return True
     else:
         return False
 
 
-# Define endpoint for asking questions
+# STEP 4 - Design FastAPI Endpoint
 @app.post("/ask-question")
 async def ask_question(user_question: UserQuestion):
     try:
@@ -49,15 +56,17 @@ async def ask_question(user_question: UserQuestion):
 
         compute_embeddings(conn, constants.FAQ_DATABASE)
 
-        answer = process_user_query(conn, user_question.user_question, constants.SIMILARITY_THRESHOLD)
+        source, question, answer = process_user_query(conn, user_question.user_question, constants.SIMILARITY_THRESHOLD)
         cursor.close()
         conn.close()
 
-        return answer
+        return AnswerResponse(source=source, matched_question=question, answer=answer)
 
-    except NoOpenAIKeyError:
-        raise HTTPException(status_code=500, detail="No OpenAI API key found")
-    except psycopg2.OperationalError as exception:
+    except NoOpenAIKeyError as exception:
+        raise HTTPException(status_code=500, detail=str(exception))
+    except psycopg2.Error as exception:
         raise DatabaseError("Database error: " + str(exception))
+    except RequestError as exception:
+        raise HTTPException(status_code=500, detail=str(exception))
     except Exception as exception:
         raise HTTPException(status_code=500, detail=str(exception))
