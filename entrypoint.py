@@ -1,15 +1,20 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header, APIRouter
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
 from model.exceptions.custom_exceptions import NoOpenAIKeyError, RequestError
 from model.qa_system.database import *
 from model.qa_system.main_model import compute_embeddings, process_user_query
 
-app = FastAPI()
 load_dotenv(dotenv_path="model/config/.env")
+
+app = FastAPI()
+router = APIRouter()
+
+# todo rename the package model , qa_system and main_model.py
 
 # PostgreSQL
 DB_NAME = os.getenv("DB_NAME")
@@ -32,11 +37,40 @@ class AnswerResponse(BaseModel):
     answer: str
 
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+@app.post("/token")
+async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return {"access_token": form_data.username + "token"}
+
+
+@app.get("/")
+async def index(token: str = Depends(oauth2_scheme)):
+    return {"token": token}
+
+
 def check_if_openai_api_key_exists():
     if os.getenv("OPENAI_API_KEY"):
         return True
     else:
         return False
+
+
+# Define a dependency to get the access token from the request headers
+def get_token(authorization: str = Header(None)):
+    if authorization is None:
+        raise HTTPException(status_code=401, detail="Authorization header is missing")
+
+    # Assuming the token is in the format "Bearer <token>"
+    try:
+        scheme, token = authorization.split()
+        if scheme.lower() != "bearer":
+            raise HTTPException(status_code=401, detail="Invalid authentication scheme")
+    except ValueError:
+        raise HTTPException(status_code=401, detail="Invalid authorization header format")
+
+    return token
 
 
 # STEP 4 - Design FastAPI Endpoint
@@ -46,8 +80,9 @@ async def ask_question(user_question: UserQuestion):
         if not check_if_openai_api_key_exists():  # TRUE
             raise NoOpenAIKeyError("No OpenAI API key found")
 
-        with psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST,
-                              port=DB_PORT) as conn:
+        conn = get_connection()
+
+        if conn:
             with conn.cursor() as cursor:
                 if not table_exists(conn, cursor):
                     create_embeddings_table(conn, cursor)
