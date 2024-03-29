@@ -11,7 +11,7 @@ from components.exceptions.custom_exceptions import NoOpenAIKeyError, RequestErr
 from components.qa_system.database_operations import *
 from components.qa_system.faq_search import compute_embeddings, process_user_query
 
-load_dotenv(dotenv_path="components/config/.env")
+# load_dotenv(dotenv_path=".env")
 
 jwt_secret_key = secrets.token_urlsafe(32)
 os.environ['JWT_SECRET_KEY'] = jwt_secret_key

@@ -2,25 +2,30 @@ import json
 import os
 
 import psycopg2
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 import components.config.constants as constants
 from components.exceptions.custom_exceptions import DatabaseError
 from components.models.Embedding import Embedding
 from components.models.User import User
+import logging  # Import the logging module
 
-load_dotenv(dotenv_path="components/config/.env")
+# load_dotenv(dotenv_path="qa_assistent/../.env")
 
 # PostgreSQL
-DB_NAME = os.getenv("DB_NAME")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT")
+DB_NAME = os.getenv("POSTGRES_DB")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+DB_HOST = os.getenv("POSTGRES_HOST")
+DB_PORT = os.getenv("POSTGRES_PORT")
+
+logging.basicConfig(level=logging.DEBUG)  # Set logging level to DEBUG
 
 
 def get_connection():
     try:
+        logging.debug(f"Connecting to PostgreSQL: dbname={DB_NAME}, user={DB_USER}, password={DB_PASSWORD}, host={DB_HOST}, port={DB_PORT}")
+
         conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST, port=DB_PORT)
         return conn
     except psycopg2.OperationalError as exception:
