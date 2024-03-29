@@ -1,3 +1,6 @@
+JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+REFRESH_TOKEN_EXPIRE_DAYS = 30
 CONTENT_TYPE = "application/json"
 EMBEDDING_MODEL = "text-embedding-3-small"
 OPENAI_GET_ANSWER_MODEL = "gpt-4-turbo-preview"
@@ -11,8 +14,14 @@ CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
                                 "answer_embedding JSONB)"
 CREATE_USERS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS users (" \
                            " id SERIAL PRIMARY KEY," \
-                           " username VARCHAR(100)," \
-                           " password VARCHAR(100))"
+                           " username VARCHAR(100) NOT NULL," \
+                           " password VARCHAR(100) NOT NULL)"
+CREATE_TOKENS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS tokens (" \
+                            "id SERIAL PRIMARY KEY," \
+                            "user_id INTEGER REFERENCES users(id) ON DELETE CASCADE," \
+                            "access_token TEXT NOT NULL," \
+                            "refresh_token TEXT NOT NULL," \
+                            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
 ADD_EMBEDDINGS_CONSTRAINT = "ALTER TABLE embeddings " \
                             "ADD CONSTRAINT question_unique_constraint UNIQUE (question)"
 ADD_USERS_CONSTRAINT = "ALTER TABLE users " \
@@ -23,6 +32,11 @@ INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question
                                      "SET question_embedding = EXCLUDED.question_embedding," \
                                      "answer = EXCLUDED.answer," \
                                      "answer_embedding = EXCLUDED.answer_embedding"
+INSERT_INTO_USERS_TABLE_QUERY = "INSERT INTO users (username, password) VALUES (%s, %s)"
+INSERT_INTO_TOKENS_TABLE_QUERY = "INSERT INTO tokens (username, access_token, refresh_token) VALUES (%s, %s, %s)"
+GET_TOKENS_QUERY = "SELECT access_token, refresh_token FROM tokens WHERE username = %s"
+GET_USER_QUERY = "SELECT * FROM users WHERE username = %s"
+GET_EMBEDDINGS_QUERY = "SELECT id, question, question_embedding, answer  FROM embeddings"
 TABLE_EMBEDDINGS_EXISTS_QUERY = " SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_name = 'embeddings') "
 CHECK_CONSTRAINT_EMBEDDINGS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
 CHECK_CONSTRAINT_USERS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'username_unique_constraint')"
