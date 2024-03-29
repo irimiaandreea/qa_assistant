@@ -1,8 +1,6 @@
-import base64
 import secrets
 from datetime import datetime, timedelta
 
-from cryptography.fernet import Fernet
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -16,10 +14,7 @@ from components.qa_system.faq_search import compute_embeddings, process_user_que
 load_dotenv(dotenv_path="components/config/.env")
 
 jwt_secret_key = secrets.token_urlsafe(32)
-fernet_secret_key = Fernet.generate_key()
-encoded_fernet_secret_key = base64.urlsafe_b64encode(fernet_secret_key).decode('utf-8')
 os.environ['JWT_SECRET_KEY'] = jwt_secret_key
-os.environ['FERNET_SECRET_KEY'] = encoded_fernet_secret_key
 
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 ALGORITHM = constants.JWT_ALGORITHM
