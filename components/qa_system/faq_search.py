@@ -10,7 +10,7 @@ import components.config.constants as constants
 import components.qa_system.database_operations as db
 from components.exceptions.custom_exceptions import *
 
-load_dotenv(dotenv_path="../config/.env")
+load_dotenv(dotenv_path="components/config/.env")
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 

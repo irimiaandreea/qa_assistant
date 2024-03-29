@@ -96,7 +96,7 @@ def add_users_constraint(conn, cursor):
         conn.commit()
     except psycopg2.Error as exception:
         conn.rollback()
-        raise DatabaseError(f"Error adding unique embeddings constraint: {exception}")
+        raise DatabaseError(f"Error adding unique users constraint: {exception}")
 
 
 def embeddings_constraint_exists(conn, cursor):
