@@ -6,26 +6,6 @@ EMBEDDING_MODEL = "text-embedding-3-small"
 OPENAI_GET_ANSWER_MODEL = "gpt-4-turbo-preview"
 OPENAI_API_URL_EMBEDDINGS = "https://api.openai.com/v1/embeddings"
 OPENAI_API_URL_COMPLETIONS = "https://api.openai.com/v1/chat/completions"
-CREATE_EMBEDDINGS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS embeddings (" \
-                                "id SERIAL PRIMARY KEY," \
-                                "question TEXT," \
-                                "question_embedding JSONB," \
-                                "answer TEXT," \
-                                "answer_embedding JSONB)"
-CREATE_USERS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS users (" \
-                           " id SERIAL PRIMARY KEY," \
-                           " username VARCHAR(100) NOT NULL," \
-                           " password VARCHAR(100) NOT NULL)"
-CREATE_TOKENS_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS tokens (" \
-                            "id SERIAL PRIMARY KEY," \
-                            "user_id INTEGER REFERENCES users(id) ON DELETE CASCADE," \
-                            "access_token TEXT NOT NULL," \
-                            "refresh_token TEXT NOT NULL," \
-                            "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"
-ADD_EMBEDDINGS_CONSTRAINT = "ALTER TABLE embeddings " \
-                            "ADD CONSTRAINT question_unique_constraint UNIQUE (question)"
-ADD_USERS_CONSTRAINT = "ALTER TABLE users " \
-                       "ADD CONSTRAINT username_unique_constraint UNIQUE (username)"
 INSERT_INTO_EMBEDDINGS_TABLE_QUERY = "INSERT INTO embeddings (question, question_embedding, answer, answer_embedding) " \
                                      "VALUES (%s, %s, %s, %s)" \
                                      "ON CONFLICT (question) DO UPDATE " \
@@ -37,9 +17,6 @@ INSERT_INTO_TOKENS_TABLE_QUERY = "INSERT INTO tokens (username, access_token, re
 GET_TOKENS_QUERY = "SELECT access_token, refresh_token FROM tokens WHERE username = %s"
 GET_USER_QUERY = "SELECT * FROM users WHERE username = %s"
 GET_EMBEDDINGS_QUERY = "SELECT id, question, question_embedding, answer  FROM embeddings"
-TABLE_EMBEDDINGS_EXISTS_QUERY = " SELECT EXISTS ( SELECT 1 FROM information_schema.tables WHERE table_name = 'embeddings') "
-CHECK_CONSTRAINT_EMBEDDINGS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'embeddings_unique_constraint')"
-CHECK_CONSTRAINT_USERS_QUERY = " SELECT EXISTS (SELECT 1 FROM information_schema.constraint_column_usage WHERE constraint_name = 'username_unique_constraint')"
 SIMILARITY_THRESHOLD = 0.8
 FAQ_DATABASE = [
     {

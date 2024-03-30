@@ -2,19 +2,18 @@ version: '3'
 
 services:
   postgres:
+    container_name: postgres_container
     image: postgres:latest
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_HOST: ${DB_HOST}
-      POSTGRES_PORT: ${DB_PORT}
+    ports:
+      - "5432:5432"
     env_file:
-      - /components/config/.env
+      - ./components/config/.env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+       - ./components/config:/docker-entrypoint-initdb.d
+       - db:/data/postgres
 
   fastapi:
+    container_name: fastapi_container
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,6 +21,8 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+    env_file:
+      - ./components/config/.env
 
 volumes:
-  postgres_data:
+  db:

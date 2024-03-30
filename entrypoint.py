@@ -1,8 +1,6 @@
-import base64
 import secrets
 from datetime import datetime, timedelta
 
-from cryptography.fernet import Fernet
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -13,13 +11,8 @@ from components.exceptions.custom_exceptions import NoOpenAIKeyError, RequestErr
 from components.qa_system.database_operations import *
 from components.qa_system.faq_search import compute_embeddings, process_user_query
 
-load_dotenv(dotenv_path="components/config/.env")
-
 jwt_secret_key = secrets.token_urlsafe(32)
-fernet_secret_key = Fernet.generate_key()
-encoded_fernet_secret_key = base64.urlsafe_b64encode(fernet_secret_key).decode('utf-8')
 os.environ['JWT_SECRET_KEY'] = jwt_secret_key
-os.environ['FERNET_SECRET_KEY'] = encoded_fernet_secret_key
 
 SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 ALGORITHM = constants.JWT_ALGORITHM
@@ -130,19 +123,9 @@ async def ask_question(user_question: UserQuestion, token: str = Depends(oauth2_
 
         conn = get_connection()
 
-        if conn:
-            with conn.cursor() as cursor:
-                create_embeddings_table(conn, cursor)
-                create_user_table(conn, cursor)
-                if not embeddings_constraint_exists(conn, cursor):
-                    add_embeddings_constraint(conn, cursor)
-                    if not users_constraint_exists(conn, cursor):
-                        add_users_constraint(conn, cursor)
-
         compute_embeddings(conn, constants.FAQ_DATABASE)
 
         source, question, answer = process_user_query(conn, user_question.user_question, constants.SIMILARITY_THRESHOLD)
-        cursor.close()
         conn.close()
 
         return AnswerResponse(source=source, matched_question=question, answer=answer)

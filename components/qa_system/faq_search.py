@@ -2,7 +2,6 @@ import os
 
 import numpy as np
 import requests
-from dotenv import load_dotenv
 from openai import OpenAIError
 from scipy.spatial.distance import cosine
 
@@ -10,7 +9,6 @@ import components.config.constants as constants
 import components.qa_system.database_operations as db
 from components.exceptions.custom_exceptions import *
 
-load_dotenv(dotenv_path="components/config/.env")
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 
@@ -21,7 +19,7 @@ def compute_embeddings(conn, faq_database):
             current_question = faq_entry["question"]
             current_answer = faq_entry["answer"]
 
-            response = get_embeddings([current_question, current_answer])
+            response = get_embeddings_from_openai([current_question, current_answer])
 
             if response.status_code == 200:
                 embeddings = response.json()["data"]
@@ -36,7 +34,7 @@ def compute_embeddings(conn, faq_database):
 
 
 def process_embeddings_for_user(user_question):
-    response = get_embeddings(user_question)
+    response = get_embeddings_from_openai(user_question)
 
     if response.status_code == 200:
         data = response.json()["data"]
@@ -47,7 +45,7 @@ def process_embeddings_for_user(user_question):
 
 
 # Function to compute embeddings for a given input data using OpenAI API
-def get_embeddings(input_data):
+def get_embeddings_from_openai(input_data):
     payload = {
         "input": input_data,
         "model": constants.EMBEDDING_MODEL
