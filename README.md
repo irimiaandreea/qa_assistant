@@ -35,7 +35,7 @@
  - Endpoint: `/token`
  - Method: POST 
  - Body Parameters: `username`, `password`
- - Description: Obtain an access token for QAuth2.0 by providing the registered username and password.
+ - Description: Obtain an access token for QAuth2.0 by providing the registered username and password. The access token expires after 30 minutes, while the refresh token expires after 30 days.
  - Request: 
   ```
   POST /token
