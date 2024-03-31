@@ -9,8 +9,8 @@ services:
     env_file:
       - ./components/config/.env
     volumes:
-       - ./components/config:/docker-entrypoint-initdb.d
-       - db:/data/postgres
+      - ./components/config:/docker-entrypoint-initdb.d
+      - db:/data/postgres
 
   fastapi:
     container_name: fastapi_container
