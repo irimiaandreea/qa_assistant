@@ -1,10 +1,23 @@
 # intelligent_qa_assistant
 
+### Mandatory requirements:
+- Create a file, called **`.env`** and place it inside the _**components/config**_ directory
+- Example of what **`.env`** file must contain:
+
+```
+    POSTGRES_DB=database_name
+    POSTGRES_USER=username
+    POSTGRES_PASSWORD=password
+    POSTGRES_HOST=postgres
+    POSTGRES_PORT=5432
+    OPENAI_API_KEY=valid_open_ai_api_key
+```
+
 ### Build the Docker images from the docker-compose.yaml file:
 - `docker-compose build`
 - `docker-compose up`
 - `docker-compose ps` to check if the containers (fastapi_container and postgres_container) are up and running (Status = 'Up')
-- start making API calls to the available endpoints, but take into consideration that the **QAuth2.0 mechanism** is implemented on `/ask-question` endpoint, and a **'token'** parameter is expected for authentication
+- Start making API calls to the available endpoints, but take into consideration that the **QAuth2.0 mechanism** is implemented on `/ask-question` endpoint, and a **'token'** parameter is expected for authentication
 
 ### Endpoints
 
@@ -14,7 +27,8 @@
  - Body Parameters: `username`, `password`
  - Description: Register a new user by providing a username (unique) and password.
  - Request:
-  ```
+ 
+```
   POST /register
   Content-Type: application/json
   
@@ -24,7 +38,8 @@
   }
 ```
  - Response:
-  ```
+ 
+```
   {
       "message": "User registered successfully"
   }
@@ -37,7 +52,8 @@
  - Body Parameters: `username`, `password`
  - Description: Obtain an access token for QAuth2.0 by providing the registered username and password. The access token expires after 30 minutes, while the refresh token expires after 30 days.
  - Request: 
-  ```
+ 
+```
   POST /token
     Content-Type: application/x-www-form-urlencoded
     
@@ -47,7 +63,8 @@
     }
 ```
  - Response:
-  ```
+  
+```
     {
         "access_token": "a12w3s4s",
         "token_type": "bearer",
@@ -63,7 +80,8 @@
  - Body Parameters: `user_question`
  - Description: A user can ask a question and get an answer either from the local FAQ database or from OpenAI.
  - Request: 
-  ```
+ 
+```
    POST /ask-question
     Content-Type: application/json
     Authorization: Bearer <valid_access_token>
@@ -73,7 +91,8 @@
     }
 ```
  - Response: 
-  ```
+ 
+```
     {
         "source": "openai",
         "matched_question": "N/A",
@@ -82,7 +101,8 @@
 ```
 
  - Request: 
-  ```
+ 
+```
    POST /ask-question
     Content-Type: application/json
     Authorization: Bearer <valid_access_token>
@@ -92,7 +112,8 @@
     }
 ```
  - Response: 
-  ```
+ 
+```
     {
         "source": "local",
         "matched_question": "Can I set up two-factor authentication for my account?",
@@ -107,7 +128,8 @@
  - Body Parameters: `refresh_token`
  - Description: If the current access token expires (after 30 min) then generate another valid access token by providing the refresh token obtained during authentication.
  - Request: 
-  ```
+ 
+```
   POST /refresh-token
     Content-Type: application/json
     
@@ -116,7 +138,8 @@
     }
 ```
  - Response: 
-  ```
+ 
+```
    {
       "access_token": "0i9p8u7l",
       "token_type": "bearer"
