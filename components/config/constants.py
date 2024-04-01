@@ -1,4 +1,11 @@
+import os
+import secrets
+
 JWT_ALGORITHM = "HS256"
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+if JWT_SECRET_KEY is None:
+    JWT_SECRET_KEY = secrets.token_urlsafe(32)
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 30
 CONTENT_TYPE = "application/json"
