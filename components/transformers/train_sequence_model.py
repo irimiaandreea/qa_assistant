@@ -6,7 +6,8 @@ import os
 import pandas as pd
 from datasets import Dataset
 
-
+#TODO
+# remove print() statements
 class CustomDataCollator:
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
@@ -40,7 +41,8 @@ def clean_up_directories(*directories):
 
 def tokenize_input(example):
     inputs = tokenizer(example['Question'], truncation=True, padding='max_length', max_length=128)
-    inputs['labels'] = example['IT_related']
+    inputs['labels'] = [[label] for label in example['IT_related']]
+
     return inputs
 
 
@@ -63,18 +65,21 @@ def train_and_evaluate_model():
         evaluation_strategy="epoch",
         logging_dir=None,
         report_to=["none"],
-        num_train_epochs=3,
+        num_train_epochs=5,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        learning_rate=3e-5,
+        learning_rate=5e-5,
         save_strategy="epoch",
         warmup_ratio=0.1,
     )
 
     def compute_metrics(eval_pred):
-        predictions, labels = eval_pred.predictions, eval_pred.label_ids
-        preds = torch.argmax(predictions, dim=1)
-        return {"accuracy": (preds == labels).mean().item()}
+        predictions, actual_classes = eval_pred.predictions, eval_pred.label_ids
+        predictions = torch.tensor(predictions)
+        actual_classes = torch.tensor(actual_classes)
+
+        predicted_classes = torch.argmax(predictions, dim=1)
+        return {"accuracy": (predicted_classes == actual_classes).float().mean().item()}
 
     trainer = Trainer(
         model=bert,
