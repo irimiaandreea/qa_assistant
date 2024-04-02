@@ -1,12 +1,17 @@
+import os
 import shutil
 
-from transformers import BertForSequenceClassification, BertTokenizerFast, TrainingArguments, Trainer
-import torch
-import os
 import pandas as pd
+import torch
+import torch.nn.functional as F
 from datasets import Dataset
+from sklearn.metrics import precision_score, recall_score, f1_score
+from transformers import BertForSequenceClassification, BertTokenizerFast, TrainingArguments, Trainer
+import mlflow
+from mlflow.tracking import MlflowClient
 
-#TODO
+
+# TODO
 # remove print() statements
 class CustomDataCollator:
     def __init__(self, tokenizer):
@@ -57,45 +62,71 @@ def process_data(input_dataset):
 
 
 def train_and_evaluate_model():
-    bert = BertForSequenceClassification.from_pretrained("bert-base-uncased",
-                                                         num_labels=num_classes)
+    mlflow.set_experiment("binary_classification_experiment")
+    with mlflow.start_run():
+        bert = BertForSequenceClassification.from_pretrained("bert-base-uncased",
+                                                             num_labels=num_classes)
 
-    training_args = TrainingArguments(  # hyperparameters
-        output_dir=seq_trained_model_dir,
-        evaluation_strategy="epoch",
-        logging_dir=None,
-        report_to=["none"],
-        num_train_epochs=5,
-        per_device_train_batch_size=8,
-        per_device_eval_batch_size=8,
-        learning_rate=5e-5,
-        save_strategy="epoch",
-        warmup_ratio=0.1,
-    )
+        training_args = TrainingArguments(  # hyperparameters
+            output_dir=seq_trained_model_dir,
+            evaluation_strategy="epoch",
+            logging_dir=None,
+            report_to=["none"],
+            num_train_epochs=5,
+            per_device_train_batch_size=8,
+            per_device_eval_batch_size=8,
+            learning_rate=5e-5,
+            save_strategy="epoch",
+            warmup_ratio=0.1,
+        )
 
-    def compute_metrics(eval_pred):
-        predictions, actual_classes = eval_pred.predictions, eval_pred.label_ids
-        predictions = torch.tensor(predictions)
-        actual_classes = torch.tensor(actual_classes)
+        def compute_metrics(eval_pred):
+            predictions, actual_classes = eval_pred.predictions, eval_pred.label_ids
+            predictions = torch.tensor(predictions)
+            probabilities = F.softmax(predictions, dim=1)
+            actual_classes = torch.tensor(actual_classes).squeeze()
 
-        predicted_classes = torch.argmax(predictions, dim=1)
-        return {"accuracy": (predicted_classes == actual_classes).float().mean().item()}
+            positive_class_probs = probabilities[:, 1]
 
-    trainer = Trainer(
-        model=bert,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
-        tokenizer=tokenizer,
-        data_collator=data_collator,
-        compute_metrics=compute_metrics,
-    )
+            loss = F.binary_cross_entropy(positive_class_probs, actual_classes.float())
 
-    trainer.train()
-    testing_results = trainer.evaluate(test_dataset)
-    print(testing_results)
-    trainer.save_model(seq_trained_model_dir)
-    tokenizer.save_pretrained(seq_trained_tokenizer_dir)
+            predicted_classes = (positive_class_probs > 0.5).float()  # Convert probabilities to binary predictions
+
+            accuracy = (predicted_classes == actual_classes).float().mean().item()
+            precision = precision_score(actual_classes, predicted_classes)
+            recall = recall_score(actual_classes, predicted_classes)
+            f1 = f1_score(actual_classes, predicted_classes)
+            binary_cross_entropy_loss = loss.item()
+
+            mlflow.log_metric("accuracy", accuracy)
+            mlflow.log_metric("precision", precision)
+            mlflow.log_metric("recall", recall)
+            mlflow.log_metric("f1", f1)
+            mlflow.log_metric("binary_cross_entropy_loss", binary_cross_entropy_loss)
+
+            return {
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall": recall,
+                "f1_score": f1,
+                "binary_cross_entropy_loss": binary_cross_entropy_loss
+            }
+
+        trainer = Trainer(
+            model=bert,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            tokenizer=tokenizer,
+            data_collator=data_collator,
+            compute_metrics=compute_metrics,
+        )
+
+        trainer.train()
+        testing_results = trainer.evaluate(test_dataset)
+
+        trainer.save_model(seq_trained_model_dir)
+        tokenizer.save_pretrained(seq_trained_tokenizer_dir)
 
 
 if __name__ == "__main__":
@@ -115,11 +146,6 @@ if __name__ == "__main__":
     train_dataset = train_test_dataset_dict['train']
     test_dataset = test_eval_dataset_dict['test']
     eval_dataset = test_eval_dataset_dict['train']
-
-    print("train_dataset ", train_dataset)
-    print("test_dataset ", test_dataset)
-    print("eval_dataset ", eval_dataset)
-    print("num classes ", num_classes)
 
     data_collator = CustomDataCollator(tokenizer=tokenizer)
 
