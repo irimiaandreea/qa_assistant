@@ -1,0 +1,412 @@
+Question: "How does cloud computing work?",
+Predicted label: 1
+Confidence: 0.9573785066604614
+
+Question: "What are the latest trends in artificial intelligence?",
+Predicted label: 0
+Confidence: 0.9383015036582947
+
+Question: "How can I secure my network from cyber attacks?",
+Predicted label: 1
+Confidence: 0.9726324677467346
+
+Question: How does encryption work in computer networks?
+Predicted label: 1
+Confidence: 0.9791597127914429
+
+Question: What are the benefits of using blockchain technology?
+Predicted label: 1
+Confidence: 0.5007081031799316
+
+Question: Can you explain the concept of quantum computing?
+Predicted label: 1
+Confidence: 0.5020353198051453
+
+Question: How does the Internet of Things (IoT) impact daily life?
+Predicted label: 0
+Confidence: 0.8064534664154053
+
+Question: What are the advantages of using cloud storage services?
+Predicted label: 1
+Confidence: 0.9794579744338989
+
+Question: How does machine learning improve healthcare?
+Predicted label: 0
+Confidence: 0.9832540154457092
+
+Question: What are the main components of a computer processor?
+Predicted label: 1
+Confidence: 0.9626124501228333
+
+Question: Can you describe the process of data mining?
+Predicted label: 1
+Confidence: 0.9652698636054993
+
+Question: How do self-driving cars navigate through traffic?
+Predicted label: 0
+Confidence: 0.9834588766098022
+
+Question: What are the security risks associated with social media platforms?
+Predicted label: 0
+Confidence: 0.9678689241409302
+
+Question: How does virtual reality technology work?
+Predicted label: 1
+Confidence: 0.7507689595222473
+
+Question: What are the differences between artificial intelligence and machine learning?
+Predicted label: 0
+Confidence: 0.9385970830917358
+
+Question: Can you explain the concept of big data?
+Predicted label: 1
+Confidence: 0.7246378064155579
+
+Question: How do search engines rank web pages?
+Predicted label: 1
+Confidence: 0.9809554219245911
+
+Question: What role does data analytics play in business decision-making?
+Predicted label: 0
+Confidence: 0.9702094197273254
+
+Question: How does facial recognition technology work?
+Predicted label: 1
+Confidence: 0.5063272714614868
+
+Question: What are the implications of 5G technology on communication networks?
+Predicted label: 1
+Confidence: 0.8767812252044678
+
+Question: Can you describe the process of software development?
+Predicted label: 1
+Confidence: 0.81183260679245
+
+Question: How does natural language processing enable chatbots to understand human language?
+Predicted label: 1
+Confidence: 0.9788667559623718
+
+Question: What are the privacy concerns associated with online shopping?
+Predicted label: 0
+Confidence: 0.9831277132034302
+
+Question: How do algorithms impact social media content moderation?
+Predicted label: 1
+Confidence: 0.9718990921974182
+
+Question: What are the benefits of using renewable energy sources?
+Predicted label: 0
+Confidence: 0.9864533543586731
+
+Question: Can you explain the concept of neural networks?
+Predicted label: 1
+Confidence: 0.716164231300354
+
+Question: How does cybersecurity protect against online threats?
+Predicted label: 1
+Confidence: 0.9112061858177185
+
+Question: What role does data visualization play in data analysis?
+Predicted label: 1
+Confidence: 0.872998833656311
+
+Question: How does biometric authentication enhance security?
+Predicted label: 1
+Confidence: 0.9620757699012756
+
+Question: What are the ethical considerations of artificial intelligence?
+Predicted label: 0
+Confidence: 0.9802640676498413
+
+Question: How does cloud computing support remote work?
+Predicted label: 1
+Confidence: 0.986367404460907
+
+Question: Can you describe the process of video streaming over the internet?
+Predicted label: 1
+Confidence: 0.9642447233200073
+
+Question: What are the advantages of using open-source software?
+Predicted label: 1
+Confidence: 0.5143531560897827
+
+Question: How do drones navigate through airspace?
+Predicted label: 0
+Confidence: 0.9132727980613708
+
+Question: What are the challenges of implementing autonomous vehicles?
+Predicted label: 0
+Confidence: 0.986914336681366
+
+Question: Can you explain the concept of blockchain consensus mechanisms?
+Predicted label: 1
+Confidence: 0.9700151085853577
+
+Question: How does geolocation technology track mobile devices?
+Predicted label: 1
+Confidence: 0.9730473160743713
+
+Question: What role does data encryption play in cybersecurity?
+Predicted label: 1
+Confidence: 0.9689313173294067
+
+Question: How do e-commerce platforms recommend products to users?
+Predicted label: 1
+Confidence: 0.9659884572029114
+
+Question: What are the benefits of using containerization in software development?
+Predicted label: 1
+Confidence: 0.894988477230072
+
+Question: Can you describe the process of 3D printing?
+Predicted label: 0
+Confidence: 0.7099435925483704
+
+Question: How does augmented reality enhance user experiences?
+Predicted label: 0
+Confidence: 0.8780074715614319
+
+Question: What are the risks of using public Wi-Fi networks?
+Predicted label: 1
+Confidence: 0.9137750864028931
+
+Question: How does biometric identification work in airport security?
+Predicted label: 0
+Confidence: 0.8958612084388733
+
+Question: What role does predictive analytics play in forecasting?
+Predicted label: 0
+Confidence: 0.9791401624679565
+
+Question: How do smart home devices communicate with each other?
+Predicted label: 1
+Confidence: 0.97477787733078
+
+Question: What are the environmental impacts of electronic waste?
+Predicted label: 0
+Confidence: 0.9845287203788757
+
+Question: Can you explain the concept of edge computing?
+Predicted label: 1
+Confidence: 0.9230272173881531
+
+Question: How does distributed ledger technology ensure data integrity?
+Predicted label: 1
+Confidence: 0.9759327173233032
+
+Question: What are the advantages of using virtual private networks (VPNs)?
+Predicted label: 1
+Confidence: 0.9841975569725037
+
+Question: How does the Internet Protocol (IP) address system function?
+Predicted label: 1
+Confidence: 0.9865961670875549
+
+Question: What role do data breaches play in cybersecurity awareness?
+Predicted label: 0
+Confidence: 0.7250315546989441
+
+Question: Can you describe the process of data compression in multimedia files?
+Predicted label: 1
+Confidence: 0.9835045337677002
+
+Question: How do social media algorithms personalize content for users?
+Predicted label: 1
+Confidence: 0.9778508543968201
+
+Question: What are the advantages of using agile project management methodologies?
+Predicted label: 0
+Confidence: 0.7007048726081848
+
+Question: Can you explain the concept of deep learning neural networks?
+Predicted label: 1
+Confidence: 0.7069548964500427
+
+Question: How does cloud migration impact legacy systems?
+Predicted label: 1
+Confidence: 0.9714078307151794
+
+Question: What role does data governance play in ensuring data quality?
+Predicted label: 1
+Confidence: 0.8143349885940552
+
+Question: What are the security challenges of using Internet of Things (IoT) devices?
+Predicted label: 1
+Confidence: 0.9817518591880798
+
+Question: How does geospatial technology support urban planning?
+Predicted label: 0
+Confidence: 0.9730926156044006
+
+Question: What are the potential applications of quantum cryptography?
+Predicted label: 0
+Confidence: 0.6215507388114929
+
+Question: Can you describe the process of database normalization?
+Predicted label: 1
+Confidence: 0.9745237827301025
+
+Question: How does data anonymization protect sensitive information?
+Predicted label: 1
+Confidence: 0.9797019958496094
+
+Question: What are the benefits of using continuous integration and continuous deployment (CI/CD)?
+Predicted label: 1
+Confidence: 0.9673260450363159
+
+Question: How do voice recognition systems differentiate between speakers?
+Predicted label: 1
+Confidence: 0.7543870806694031
+
+Question: What role does data lakes play in storing and analyzing big data?
+Predicted label: 1
+Confidence: 0.9596095085144043
+
+Question: How does sentiment analysis analyze text data for emotions?
+Predicted label: 0
+Confidence: 0.7658429741859436
+
+Question: What are the challenges of implementing smart city initiatives?
+Predicted label: 0
+Confidence: 0.9863939881324768
+
+Question: Can you explain the concept of serverless computing?
+Predicted label: 1
+Confidence: 0.9668874144554138
+
+Question: How does natural language generation create human-like text?
+Predicted label: 1
+Confidence: 0.9544808864593506
+
+Question: What are the advantages of using microservices architecture?
+Predicted label: 1
+Confidence: 0.9558357000350952
+
+Question: How do recommendation systems personalize user experiences?
+Predicted label: 1
+Confidence: 0.978636622428894
+
+Question: What role does data preprocessing play in machine learning pipelines?
+Predicted label: 1
+Confidence: 0.9779813885688782
+
+Question: How does distributed computing handle large-scale data processing?
+Predicted label: 1
+Confidence: 0.9739698767662048
+
+Question: What are the ethical implications of artificial intelligence in healthcare?
+Predicted label: 0
+Confidence: 0.9846464991569519
+
+Question: Can you describe the process of data classification?
+Predicted label: 1
+Confidence: 0.9130829572677612
+
+Question: How does blockchain technology ensure transparency in supply chains?
+Predicted label: 1
+Confidence: 0.7093400955200195
+
+Question: What are the benefits of using data warehouses for business intelligence?
+Predicted label: 1
+Confidence: 0.6335896253585815
+
+Question: How do streaming services recommend movies and TV shows?
+Predicted label: 0
+Confidence: 0.9372191429138184
+
+Question: What role does explainable artificial intelligence (XAI) play in model interpretability?
+Predicted label: 1
+Confidence: 0.8604581356048584
+
+Question: How does data augmentation improve machine learning models?
+Predicted label: 1
+Confidence: 0.9414333701133728
+
+Question: What are the challenges of implementing smart grid infrastructure?
+Predicted label: 0
+Confidence: 0.9816753268241882
+
+Question: Can you explain the concept of federated learning in decentralized systems?
+Predicted label: 0
+Confidence: 0.8595638275146484
+
+Question: How does data profiling identify data quality issues?
+Predicted label: 1
+Confidence: 0.9494411945343018
+
+Question: What are the advantages of using edge devices for data processing?
+Predicted label: 1
+Confidence: 0.9762271046638489
+
+Question: How do chatbots understand and respond to user queries?
+Predicted label: 1
+Confidence: 0.9846473932266235
+
+Question: What role does anomaly detection play in cybersecurity?
+Predicted label: 1
+Confidence: 0.7423792481422424
+
+Question: How does reinforcement learning optimize decision-making processes?
+Predicted label: 0
+Confidence: 0.9755303859710693
+
+Question: What are the implications of quantum computing on encryption standards?
+Predicted label: 1
+Confidence: 0.8101606965065002
+
+Question: Can you describe the process of image recognition in computer vision?
+Predicted label: 1
+Confidence: 0.9385945200920105
+
+Question: How does data replication ensure fault tolerance in distributed systems?
+Predicted label: 1
+Confidence: 0.974276602268219
+
+Question: What are the benefits of using NoSQL databases for unstructured data?
+Predicted label: 1
+Confidence: 0.9797465801239014
+
+Question: How do recommendation algorithms personalize product recommendations?
+Predicted label: 0
+Confidence: 0.6819121241569519
+
+Question: What role does data lineage play in tracking data origins and transformations?
+Predicted label: 1
+Confidence: 0.7808374166488647
+
+Question: How does data masking protect sensitive data in databases?
+Predicted label: 1
+Confidence: 0.9832345247268677
+
+Question: What are the challenges of implementing biometric authentication systems?
+Predicted label: 1
+Confidence: 0.7061166167259216
+
+Question: Can you explain the concept of continuous monitoring in cybersecurity?
+Predicted label: 1
+Confidence: 0.8215721845626831
+
+Question: How do natural language understanding systems comprehend human language?
+Predicted label: 0
+Confidence: 0.9217633605003357
+
+Question: What are the benefits of using cloud-based data storage solutions?
+Predicted label: 1
+Confidence: 0.9711391925811768
+
+Question: How does data fusion integrate heterogeneous data sources?
+Predicted label: 1
+Confidence: 0.9637788534164429
+
+Question: What role does parallel processing play in accelerating computations?
+Predicted label: 1
+Confidence: 0.9609839916229248
+
+Question: How does data deduplication reduce storage space in databases?
+Predicted label: 1
+Confidence: 0.9777539968490601
+
+Question: What are the ethical considerations of using facial recognition technology?
+Predicted label: 0
+Confidence: 0.9819145798683167
+

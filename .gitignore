@@ -162,5 +162,5 @@ cython_debug/
 **/.idea/tasks.xml
 
 # Model training generated files
-components/transformers/output_seq_model
-components/transformers/output_seq_tokenizer
+components/transformers/bert/output_seq_model
+components/transformers/bert/output_seq_tokenizer

@@ -132,7 +132,7 @@ def train_and_evaluate_model():
 if __name__ == "__main__":
     seq_trained_model_dir = "output_seq_model"
     seq_trained_tokenizer_dir = "output_seq_tokenizer"
-    input_dataset = "input_dataset_100_questions.csv"
+    input_dataset = "training_questions.csv"
 
     clean_up_directories(seq_trained_model_dir, seq_trained_tokenizer_dir)
 
