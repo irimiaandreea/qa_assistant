@@ -84,8 +84,10 @@ async def ask_question(user_question: UserQuestion, request: Request, token: str
         await classify_it_related_question(request, user_question)
 
         is_it_related = request.state.is_it_related
-
-        logger.info("AICI AICI AICI AICI")
+        # TODO
+        # save the model in hub, and process the logic regarding the is_it_related boolean, in db or smth
+        # clean up the requirements.txt in order to build the docker image faster
+        
         logger.info(is_it_related)
 
         conn.close()
