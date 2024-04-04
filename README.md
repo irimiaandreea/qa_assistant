@@ -1,6 +1,10 @@
 # intelligent_qa_assistant
 
 ### Mandatory requirements:
+- Train the BERT model:
+  - open a terminal inside the `components/transformers/bert` and run the **`train_sequence_model.py`** file in order to train the model
+  - the training will take a few minutes
+  - after the training, the trained model and its tokenizer will be saved in the **output_seq_model**, and **output_seq_tokenizer** directories
 - Create a file, called **`.env`** and place it inside the _**components/config**_ directory.
 - Let the **JWT_SECRET_KEY** environment variable empty.
 - **JWT_SECRET_KEY** will be set inside the code with a generated value. This is just for the local development purposes. 
@@ -14,6 +18,8 @@
     POSTGRES_HOST=postgres
     POSTGRES_PORT=5432
     OPENAI_API_KEY=valid_open_ai_api_key
+    TOKENIZERS_PARALLELISM=false
+    MLFLOW_BACKEND_STORE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/postgres
     JWT_SECRET_KEY=
 ```
 

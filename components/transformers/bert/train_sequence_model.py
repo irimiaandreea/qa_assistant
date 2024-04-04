@@ -1,18 +1,19 @@
 import os
 import shutil
 
+import mlflow
 import pandas as pd
 import torch
 import torch.nn.functional as F
 from datasets import Dataset
 from sklearn.metrics import precision_score, recall_score, f1_score
 from transformers import BertForSequenceClassification, BertTokenizerFast, TrainingArguments, Trainer
-import mlflow
-from mlflow.tracking import MlflowClient
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning)
+MLFLOW_BACKEND_STORE_URI = os.getenv("MLFLOW_BACKEND_STORE_URI")
 
 
-# TODO
-# remove print() statements
 class CustomDataCollator:
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
@@ -62,10 +63,13 @@ def process_data(input_dataset):
 
 
 def train_and_evaluate_model():
+    mlflow.set_tracking_uri(MLFLOW_BACKEND_STORE_URI)
     mlflow.set_experiment("binary_classification_experiment")
-    with mlflow.start_run():
+
+    with mlflow.start_run(run_name="bert_transformer"):
         bert = BertForSequenceClassification.from_pretrained("bert-base-uncased",
                                                              num_labels=num_classes)
+        mlflow.set_tag("model_name", "bert")
 
         training_args = TrainingArguments(  # hyperparameters
             output_dir=seq_trained_model_dir,
@@ -123,16 +127,17 @@ def train_and_evaluate_model():
         )
 
         trainer.train()
-        testing_results = trainer.evaluate(test_dataset)
 
         trainer.save_model(seq_trained_model_dir)
         tokenizer.save_pretrained(seq_trained_tokenizer_dir)
+
+    mlflow.end_run()
 
 
 if __name__ == "__main__":
     seq_trained_model_dir = "output_seq_model"
     seq_trained_tokenizer_dir = "output_seq_tokenizer"
-    input_dataset = "training_questions.csv"
+    input_dataset = "../datasets/training_questions.csv"
 
     clean_up_directories(seq_trained_model_dir, seq_trained_tokenizer_dir)
 
