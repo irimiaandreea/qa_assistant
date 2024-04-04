@@ -28,8 +28,8 @@ if __name__ == "__main__":
     seq_trained_model_dir = "output_seq_model"
     seq_trained_tokenizer_dir = "output_seq_tokenizer"
 
-    input_file = "datasets/inference_questions.csv"
-    output_file = "datasets/predictions.txt"
+    input_file = "../datasets/inference_questions.csv"
+    output_file = "../datasets/predictions.txt"
 
     binary_classifier = load_model_and_tokenizer(seq_trained_model_dir, seq_trained_tokenizer_dir)
     perform_binary_text_classification(input_file, output_file, binary_classifier)
