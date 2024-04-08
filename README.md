@@ -20,6 +20,9 @@
     OPENAI_API_KEY=valid_open_ai_api_key
     TOKENIZERS_PARALLELISM=false
     MLFLOW_BACKEND_STORE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/postgres
+    HF_USERNAME=huggingface_username
+    HF_TOKEN=huggingface_access_read_token
+    HF_MODEL_REPO_NAME=${HF_USERNAME}/qa_assistant
     JWT_SECRET_KEY=
 ```
 

@@ -38,11 +38,10 @@ class CustomDataCollator:
         }
 
 
-def clean_up_directories(*directories):
-    for directory in directories:
-        if os.path.exists(directory):
-            shutil.rmtree(directory)
-        os.makedirs(directory)
+def clean_up_directory(directory):
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+    os.makedirs(directory)
 
 
 def tokenize_input(example):
@@ -129,17 +128,15 @@ def train_and_evaluate_model():
         trainer.train()
 
         trainer.save_model(seq_trained_model_dir)
-        tokenizer.save_pretrained(seq_trained_tokenizer_dir)
 
     mlflow.end_run()
 
 
 if __name__ == "__main__":
     seq_trained_model_dir = "output_seq_model"
-    seq_trained_tokenizer_dir = "output_seq_tokenizer"
     input_dataset = "../datasets/training_questions.csv"
 
-    clean_up_directories(seq_trained_model_dir, seq_trained_tokenizer_dir)
+    clean_up_directory(seq_trained_model_dir)
 
     input_hf_dataset, tokenizer, num_classes = process_data(input_dataset)
     tokenized_dataset = input_hf_dataset.map(tokenize_input, batched=True)

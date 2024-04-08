@@ -4,7 +4,13 @@ LABEL python_version="3.11.8"
 
 WORKDIR /app
 
-COPY . /app
+COPY components/api/ components/api/
+COPY components/config/ components/config/
+COPY components/exceptions/ components/exceptions/
+COPY components/models/ components/models/
+COPY components/qa_system/ components/qa_system/
+COPY entrypoint.py .
+COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
