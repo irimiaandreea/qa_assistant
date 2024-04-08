@@ -81,14 +81,14 @@ async def ask_question(user_question: UserQuestion, request: Request, token: str
         compute_embeddings(conn, constants.FAQ_DATABASE)
 
         source, question, answer = process_user_query(conn, user_question.user_question, constants.SIMILARITY_THRESHOLD)
-        await classify_it_related_question(request, user_question)
+        # await classify_it_related_question(request, user_question)
 
-        is_it_related = request.state.is_it_related
+        # is_it_related = request.state.is_it_related
         # TODO
         # save the model in hub, and process the logic regarding the is_it_related boolean, in db or smth
         # clean up the requirements.txt in order to build the docker image faster
         
-        logger.info(is_it_related)
+        # logger.info(is_it_related)
 
         conn.close()
 
