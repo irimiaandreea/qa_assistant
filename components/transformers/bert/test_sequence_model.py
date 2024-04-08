@@ -1,8 +1,8 @@
 from transformers import BertTokenizerFast, BertForSequenceClassification, pipeline
 
 
-def load_model_and_tokenizer(model_dir, tokenizer_dir):
-    tokenizer = BertTokenizerFast.from_pretrained(tokenizer_dir)
+def load_model_and_tokenizer(model_dir):
+    tokenizer = BertTokenizerFast.from_pretrained(model_dir)
     bert = BertForSequenceClassification.from_pretrained(model_dir)
     binary_classifier = pipeline("text-classification", model=bert, tokenizer=tokenizer)
     return binary_classifier
@@ -26,10 +26,9 @@ def perform_binary_text_classification(input_file, output_file, binary_classifie
 
 if __name__ == "__main__":
     seq_trained_model_dir = "output_seq_model"
-    seq_trained_tokenizer_dir = "output_seq_tokenizer"
 
     input_file = "../datasets/inference_questions.csv"
     output_file = "../datasets/predictions.txt"
 
-    binary_classifier = load_model_and_tokenizer(seq_trained_model_dir, seq_trained_tokenizer_dir)
+    binary_classifier = load_model_and_tokenizer(seq_trained_model_dir)
     perform_binary_text_classification(input_file, output_file, binary_classifier)

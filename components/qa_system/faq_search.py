@@ -26,7 +26,7 @@ def compute_embeddings(conn, faq_database):
                 current_question_embedding = embeddings[0]["embedding"]
                 current_answer_embedding = embeddings[1]["embedding"]
 
-                #TODO use a vector database such as  PG vector, Milvus or even a simple Faiss index instead of storing the string repr in PostgreSQL db
+                # TODO use a vector database such as  PG vector, Milvus or even a simple Faiss index instead of storing the string repr in PostgreSQL db
                 db.insert_into_embeddings(conn, cursor, current_question, current_answer, current_question_embedding,
                                           current_answer_embedding)
 

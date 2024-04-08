@@ -18,7 +18,8 @@ POSTGRES_PORT = os.getenv("POSTGRES_PORT")
 
 def get_connection():
     try:
-        conn = psycopg2.connect(dbname=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD, host=POSTGRES_HOST, port=POSTGRES_PORT)
+        conn = psycopg2.connect(dbname=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD, host=POSTGRES_HOST,
+                                port=POSTGRES_PORT)
         return conn
     except psycopg2.OperationalError as exception:
         raise DatabaseError(f"Error connection to database: {exception}")

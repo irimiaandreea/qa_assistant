@@ -24,9 +24,6 @@ services:
       - postgres
     env_file:
       - ./components/config/.env
-    volumes:
-      - ./components/transformers/bert/output_seq_model:/output_seq_model
-      - ./components/transformers/bert/output_seq_tokenizer:/output_seq_tokenizer
 
   mlflow:
     container_name: mlflow_container
@@ -38,7 +35,7 @@ services:
     depends_on:
       - postgres
     env_file:
-        - ./components/config/.env
+      - ./components/config/.env
     volumes:
       - mlflow:/mlflow
 

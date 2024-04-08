@@ -8,6 +8,7 @@ from components.qa_system.database_operations import *
 from components.qa_system.faq_search import compute_embeddings, process_user_query
 from transformers import BertTokenizerFast, BertForSequenceClassification, pipeline
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,8 @@ class AnswerResponse(BaseModel):
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
+HF_MODEL_REPO_NAME = os.getenv("HF_MODEL_REPO_NAME")
+HF_TOKEN = os.getenv("HF_TOKEN")
 
 def check_if_openai_api_key_exists():
     if os.getenv("OPENAI_API_KEY"):
@@ -34,9 +36,9 @@ def check_if_openai_api_key_exists():
         return False
 
 
-def load_model_and_tokenizer(model_dir, tokenizer_dir):
-    tokenizer = BertTokenizerFast.from_pretrained(tokenizer_dir)
-    bert = BertForSequenceClassification.from_pretrained(model_dir)
+def load_model_and_tokenizer(model_path):
+    bert = BertForSequenceClassification.from_pretrained(model_path, token=HF_TOKEN)
+    tokenizer = BertTokenizerFast.from_pretrained(model_path, token=HF_TOKEN)
     binary_classifier = pipeline("text-classification", model=bert, tokenizer=tokenizer)
     return binary_classifier
 
@@ -50,12 +52,12 @@ def perform_binary_text_classification(user_question, binary_classifier):
 
     return is_it_related
 
-#TODO
+
+# TODO
 # separate the logic , Middleware from enpdoints ?
 async def classify_it_related_question(request: Request, user_question: UserQuestion):
     try:
-        binary_classifier = load_model_and_tokenizer("/output_seq_model",
-                                                     "/output_seq_tokenizer")
+        binary_classifier = load_model_and_tokenizer(HF_MODEL_REPO_NAME)
         is_it_related = perform_binary_text_classification(user_question.user_question, binary_classifier)
 
         request.state.is_it_related = is_it_related
@@ -81,14 +83,11 @@ async def ask_question(user_question: UserQuestion, request: Request, token: str
         compute_embeddings(conn, constants.FAQ_DATABASE)
 
         source, question, answer = process_user_query(conn, user_question.user_question, constants.SIMILARITY_THRESHOLD)
-        # await classify_it_related_question(request, user_question)
+        await classify_it_related_question(request, user_question)
 
-        # is_it_related = request.state.is_it_related
-        # TODO
-        # save the model in hub, and process the logic regarding the is_it_related boolean, in db or smth
-        # clean up the requirements.txt in order to build the docker image faster
-        
-        # logger.info(is_it_related)
+        is_it_related = request.state.is_it_related
+
+        logger.info(is_it_related)
 
         conn.close()
 
