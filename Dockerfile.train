@@ -1,0 +1,13 @@
+FROM python:3.11.8-slim
+
+LABEL python_version="3.11.8"
+
+WORKDIR /app
+
+COPY components/transformers/ components/transformers/
+COPY components/config/ components/config/
+COPY requirements_train.txt .
+
+RUN pip install --no-cache-dir -r requirements_train.txt
+
+CMD ["python", "components/transformers/bert/train_sequence_model.py"]
